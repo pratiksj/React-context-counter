@@ -1,3 +1,37 @@
-import { createContext } from "react";
+import { createContext,useReducer,useContext } from "react";
+
+const counterReducer = (state, action) => {  //moving counterReducer form the app.js
+    switch (action.type) {
+      case "INC":
+          return state + 1
+      case "DEC":
+          return state - 1
+      case "ZERO":
+          return 0
+      default:
+          return state
+    }
+  }
 const CounterContext = createContext()
-export default CounterContext
+
+export const useCounterValue = () => {     //this is helper fuction 
+    const counterAndDispatch = useContext(CounterContext)
+    return counterAndDispatch[0]
+  }
+  
+  export const useCounterDispatch = () => {    // this is helper function
+    const counterAndDispatch = useContext(CounterContext)
+    return counterAndDispatch[1]
+  }
+
+export const CounterContextProvider = (props) => {
+    const [counter, counterDispatch] = useReducer(counterReducer, 0)
+return (
+    <CounterContext.Provider value={[counter, counterDispatch] }>
+    {props.children}
+  </CounterContext.Provider>
+)
+
+
+}
+    export default CounterContext
